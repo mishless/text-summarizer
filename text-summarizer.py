@@ -26,7 +26,7 @@ def pre_process_text(text):
 	tokens = [token.lower() for token in tokens if token.lower() not in stopwords_list]
 	for token in tokens:
 		if (token not in words) or (token not in list(string.punctuation)):
-			words[token] = Word(stemmer.stem(token), 0, 0, nltk.pos_tag(token), wn.synsets(token))
+			words[token] = Word(stemmer.stem(token), 0, 0, nltk.pos_tag(token), [synset.lemma_names() for synset in wn.synsets(token)])
 			title.bag_of_words.append(token)
 
 	#Pre-process text
@@ -36,10 +36,10 @@ def pre_process_text(text):
 		tokens = [token.lower() for token in tokens if token.lower() not in stopwords_list]
 		for token in tokens:
 			if (token not in words) and (token not in list(string.punctuation)):
-				words[token] = Word(stemmer.stem(token), 0, 0, nltk.pos_tag(token), wn.synsets(token))
+				words[token] = Word(stemmer.stem(token), 0, 0, nltk.pos_tag(token), [synset.lemma_names() for synset in wn.synsets(token)])
 				sentences[-1].bag_of_words.append(token)
 		
-	return [title, sentences, words]
+	return [title, sentences[1], words.popitem()]
 
 def process_input(argv=None):
 	if argv is None:
