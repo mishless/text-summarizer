@@ -3,6 +3,7 @@ import os
 import collections
 import nltk.data
 import string
+import math
 
 from argparse import ArgumentParser
 from nltk.corpus import stopwords
