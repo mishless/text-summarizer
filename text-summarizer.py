@@ -9,6 +9,9 @@ from argparse import ArgumentParser
 from nltk.corpus import stopwords
 from nltk.stem.porter import *
 from nltk.corpus import wordnet as wn
+from functools import reduce
+
+import cluster
 
 def pre_process_text(text):
 	text = text.split('\n', 1)
@@ -26,10 +29,9 @@ def pre_process_text(text):
 	tokens = nltk.word_tokenize(title.original)
 	tokens = [token.lower() for token in tokens if token.lower() not in stopwords_list]
 	part_of_speech = nltk.pos_tag(tokens)
-	part_of_speech
 	for (token, word_pos) in zip(tokens, part_of_speech):
 		if (token not in words) and (token not in list(string.punctuation)):
-				words[token] = Word(stemmer.stem(token), 0, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
+				words[token] = Word(stemmer.stem(token), 0, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
 		title.bag_of_words.append(token)
 
 	#Pre-process text
@@ -38,13 +40,13 @@ def pre_process_text(text):
 		tokens = nltk.word_tokenize(sentences[-1].original)
 		tokens = [token.lower() for token in tokens if token.lower() not in stopwords_list]
 		part_of_speech = nltk.pos_tag(tokens)
-		part_of_speech
 		for (token, word_pos) in zip(tokens, part_of_speech):
-			if (token not in words) and (token not in list(string.punctuation)):
-				words[token] = Word(stemmer.stem(token), 1, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
-			elif token in words:
-				words[token] =  Word(stemmer.stem(token), words[token].abs_frequency +1, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
-			sentences[-1].bag_of_words.append(token)
+			if (token not in list(string.punctuation)):
+				if (token not in words):
+					words[token] = Word(stemmer.stem(token), 1, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+				elif token in words:
+					words[token] =  Word(stemmer.stem(token), words[token].abs_frequency + 1, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+				sentences[-1].bag_of_words.append(token)
 		
 	return [title, sentences, words]
 
@@ -68,7 +70,8 @@ def process_input(argv=None):
 def main():
 	try:
 		text = process_input()
-		print(pre_process_text(text))
+		preprocessed_text = pre_process_text(text)
+		similarities = cluster.calculate_cosine_similarity(preprocessed_text[1], preprocessed_text[2])
 		return 0
 	except KeyboardInterrupt:
 		### handle keyboard interrupt ###
@@ -81,7 +84,4 @@ if __name__ == "__main__":
 	Word = collections.namedtuple("Word", ["stem", "abs_frequency", "term_weight", "part_of_speech", "synonym_list"])
 	Sentence = collections.namedtuple("Sentence", ["original", "position", "rank", "bag_of_words", "ending_char"])
 	Title = collections.namedtuple("Title", ["original", "bag_of_words"])
-	
 	sys.exit(main())
-
-
