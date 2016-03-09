@@ -5,6 +5,7 @@ import nltk.data
 import string
 import math
 import features
+import textClasses as tc 
 
 from argparse import ArgumentParser
 from nltk.corpus import stopwords
@@ -16,7 +17,7 @@ import cluster
 
 def pre_process_text(text):
 	text = text.split('\n', 1)
-	title = Title(text[0], [])
+	title = tc.Title(text[0], [])
 	text = text[1]
 	words = dict()
 	sentences = []
@@ -32,23 +33,24 @@ def pre_process_text(text):
 	part_of_speech = nltk.pos_tag(tokens)
 	for (token, word_pos) in zip(tokens, part_of_speech):
 		token = token.lower()
-		if (token not in words) and (token not in list(string.punctuation)):
-				words[token] = Word(stemmer.stem(token), 0, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+		if (token not in words) and (token not in list(string.punctuation) and (token not in stopwords_list)):
+				words[token] = tc.Word(stemmer.stem(token), 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
 		title.bag_of_words.append(token)
 
 	#Pre-process text
 	for detected_sentence in detected_sentences:
-		sentences.append(Sentence(detected_sentence, len(sentences) + 1, 0, [], None))
+		sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, 0, [], None))
 		tokens = nltk.word_tokenize(sentences[-1].original)
 		tokens = [token for token in tokens if token not in stopwords_list]
 		part_of_speech = nltk.pos_tag(tokens)
 		for (token, word_pos) in zip(tokens, part_of_speech):
 			token = token.lower()
-			if (token not in list(string.punctuation)):
+			if (token not in list(string.punctuation) and (token not in stopwords_list)):
 				if (token not in words):
-					words[token] = Word(stemmer.stem(token), 1, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+					words[token] = tc.Word(stemmer.stem(token), 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+					print(words[token].term_weight)
 				elif token in words:
-					words[token] =  Word(stemmer.stem(token), words[token].abs_frequency + 1, 0, word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+					words[token].increment_abs_frequency()
 				sentences[-1].bag_of_words.append(token)
 	return [title, sentences, words]
 
@@ -77,6 +79,9 @@ def main():
 		proper_noun_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'NNP')
 		numerical_data_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'CD')
 		title_word_feature_value = features.title_word_feature(preprocessed_text[0], preprocessed_text[1])
+		keyword_feature_value = features.keyword_feature(preprocessed_text[1], preprocessed_text[2])
+
+		print(preprocessed_text[2].popitem().term_weight)
 		return 0
 	except KeyboardInterrupt:
 		### handle keyboard interrupt ###
@@ -86,7 +91,4 @@ def main():
 		return 2
 
 if __name__ == "__main__":
-	Word = collections.namedtuple("Word", ["stem", "abs_frequency", "term_weight", "part_of_speech", "synonym_list"])
-	Sentence = collections.namedtuple("Sentence", ["original", "position", "rank", "bag_of_words", "ending_char"])
-	Title = collections.namedtuple("Title", ["original", "bag_of_words"])
 	sys.exit(main())

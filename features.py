@@ -1,4 +1,5 @@
 import math
+import textClasses
 
 def title_word_feature(title, processed_text):
 	""" List of values from 0 to 1 rating the number title words that appear in the sentence"""
@@ -34,13 +35,12 @@ def keyword_feature(sentences, words):
 		number_of_sentences = 0
 		for sentence in sentences:
 			if word in sentence.bag_of_words:
-			 number_of_sentences += 1
-		word = Word(word.stem, word.abs_frequency , word.abs_frequency * log10(total_number_of_sentences/number_of_sentences), word.part_of_speech, word.synonym_list)
-	
+				number_of_sentences += 1
+		words[word].set_term_weight(words[word].abs_frequency * math.log10(total_number_of_sentences/number_of_sentences))
 	for sentence in sentences:
 		sum_of_term_weights = 0
 		for word in sentence.bag_of_words:
-			sum_of_term_weights += word.term_weight
+			sum_of_term_weights += words[word].term_weight
 		keyword_feature_values.append(sum_of_term_weights)
 	
 	map(lambda x: x/max(keyword_feature_values), keyword_feature_values)
@@ -54,3 +54,9 @@ def pos_tag_feature(sentences, words, pos_tag):
 		pos_tag_words_count_list.append(len([word for word in sentence.bag_of_words if words[word].part_of_speech[1] == pos_tag]))
 	return [pos_tag_words_sentence/max(pos_tag_words_count_list) for pos_tag_words_sentence in pos_tag_words_count_list] if max(pos_tag_words_count_list)!=0 else [0]*len(pos_tag_words_count_list)    
 
+def pos_tag_feature(sentences, words, pos_tag):
+	""" List of values from 0 to 1 rating the number of words with a certain part of speech tag that appear in the sentence"""
+	pos_tag_words_count_list = []
+	for sentence in sentences:
+		pos_tag_words_count_list.append(len([word for word in sentence.bag_of_words if words[word].part_of_speech[1] == pos_tag]))
+	return [pos_tag_words_sentence/max(pos_tag_words_count_list) for pos_tag_words_sentence in pos_tag_words_count_list] if max(pos_tag_words_count_list)!=0 else [0]*len(pos_tag_words_count_list)    
