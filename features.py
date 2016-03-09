@@ -1,13 +1,12 @@
 def title_word_feature(title, processed_text):
+	""" List of values from 0 to 1 rating the number title words that appear in the sentence"""
 	title_word_feature_values = []
-	title.bag_of_words
-	processed_text
-	word_intersection = [set(filter(lambda title_word: title_word in title.bag_of_words, sublist)) for sublist in [sentence.bag_of_words for sentence in processed_text]]
+	word_intersection = [set(filter(lambda title_word: title_word in title, sublist)) for sublist in sentences]
 	print(word_intersection)
 	for word_list in word_intersection:
 		title_word_feature_values.append(len(word_list) / len(title.bag_of_words))
 	return title_word_feature_values
-	
+
 def sentence_length_feature(sentences):
 	sentence_length_feature_values = []
 	max_length_sentence = len(sentences[0].split(" "))
@@ -29,4 +28,5 @@ def sentence_location_feature(sentences):
 	
 def keyword_feature(sentences):
 	total_number_of_sentences = len(sentences)
+
 	
