@@ -43,7 +43,7 @@ def pre_process_text(text):
 			if (token not in words) and (token not in list(string.punctuation)):
 				words[token] = Word(stemmer.stem(token), 1, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
 			elif token in words:
-				words[token] =  Word(stemmer.stem(token), words[token].term_weight+1, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
+				words[token] =  Word(stemmer.stem(token), words[token].abs_frequency +1, 0, word_pos, [synset.lemma_names() for synset in wn.synsets(token)])
 			sentences[-1].bag_of_words.append(token)
 		
 	return [title, sentences, words]
