@@ -37,7 +37,7 @@ def keyword_feature(sentences, words):
 			if word in sentence.bag_of_words:
 				number_of_sentences += 1
 		number_of_sentences = 1 if (number_of_sentences == 0) else number_of_sentences  
-		words[word].set_term_weight(words[word].abs_frequency * math.log10(total_number_of_sentences/number_of_sentences))
+		words[word].term_weight = words[word].abs_frequency * math.log10(total_number_of_sentences/number_of_sentences)
 	for sentence in sentences:
 		sum_of_term_weights = 0
 		for word in sentence.bag_of_words:
@@ -45,19 +45,24 @@ def keyword_feature(sentences, words):
 		keyword_feature_values.append(sum_of_term_weights)
 	
 	map(lambda x: x/max(keyword_feature_values), keyword_feature_values)
-	return keyword_feature_values
-
-
-def pos_tag_feature(sentences, words, pos_tag):
-	""" List of values from 0 to 1 rating the number of words with a certain part of speech tag that appear in the sentence"""
-	pos_tag_words_count_list = []
-	for sentence in sentences:
-		pos_tag_words_count_list.append(len([word for word in sentence.bag_of_words if words[word].part_of_speech[1] == pos_tag]))
-	return [pos_tag_words_sentence/max(pos_tag_words_count_list) for pos_tag_words_sentence in pos_tag_words_count_list] if max(pos_tag_words_count_list)!=0 else [0]*len(pos_tag_words_count_list)    
+	return keyword_feature_values 
 
 def pos_tag_feature(sentences, words, pos_tag):
 	""" List of values from 0 to 1 rating the number of words with a certain part of speech tag that appear in the sentence"""
 	pos_tag_words_count_list = []
 	for sentence in sentences:
 		pos_tag_words_count_list.append(len([word for word in sentence.bag_of_words if words[word].part_of_speech[1] == pos_tag]))
-	return [pos_tag_words_sentence/max(pos_tag_words_count_list) for pos_tag_words_sentence in pos_tag_words_count_list] if max(pos_tag_words_count_list)!=0 else [0]*len(pos_tag_words_count_list)    
+	return [pos_tag_words_sentence/max(pos_tag_words_count_list) for pos_tag_words_sentence in pos_tag_words_count_list] if max(pos_tag_words_count_list)!=0 else [0]*len(pos_tag_words_count_list)
+
+def phrase_feature(sentences, phrase_list):
+	""" List of values from 0 to 1 rating the number of phrases that appear in the sentence from a list """
+	total_number_words = 0
+	phrase_frequency = []
+	for sentence in sentences:
+		total_number_words += len(sentence.bag_of_words)
+		count_phrase_per_sentence = 0
+		for phrase in phrase_list:
+			if phrase in sentence.original:
+				count_phrase_per_sentence += 1
+		phrase_frequency.append(count_phrase_per_sentence)
+	return [frequency/total_number_words for frequency in phrase_frequency]
