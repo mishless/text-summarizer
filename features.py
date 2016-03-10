@@ -44,8 +44,14 @@ def keyword_feature(sentences, words):
 			sum_of_term_weights += words[word].term_weight
 		keyword_feature_values.append(sum_of_term_weights)
 	
-	map(lambda x: x/max(keyword_feature_values), keyword_feature_values)
+	#map(lambda x: x/max(keyword_feature_values), keyword_feature_values)
+	maximum_keyword_feature = max(keyword_feature_values)
+	a=0
+	while a < len(keyword_feature_values):
+		keyword_feature_values[a]/=maximum_keyword_feature
+		a+=1
 	return keyword_feature_values 
+	#return maximum_keyword_feature
 
 def pos_tag_feature(sentences, words, pos_tag):
 	""" List of values from 0 to 1 rating the number of words with a certain part of speech tag that appear in the sentence"""

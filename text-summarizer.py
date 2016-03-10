@@ -103,8 +103,14 @@ def main():
 		keyword_feature_value = features.keyword_feature(preprocessed_text[1], preprocessed_text[2])
 		cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
 		stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
-		k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
-		summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
+		#k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
+		#summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
+		
+		print(keyword_feature_value)
+		#for word in preprocessed_text[2]
+			#print(word.term_weight)
+			
+		
 		return 0
 	except KeyboardInterrupt:
 		### handle keyboard interrupt ###
