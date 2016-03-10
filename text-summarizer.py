@@ -139,7 +139,6 @@ def main():
             'nonessential': stigma_word_value,
             'numerical_data': numerical_data_value,
             })
-
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

@@ -71,7 +71,7 @@ cos(a, b) = sum(a*b)/sqrt(sum(a^2))*sqrt(sum(b^2))
 def calculate_cosine_similarity(sentences, words):
     stemmer = PorterStemmer()
     similarities = {}
-	# For every pair of sentences initialize the similarity to None
+    # For every pair of sentences initialize the similarity to None
     for first_sentence in sentences:
         if first_sentence.position not in similarities:
             similarities[first_sentence.position] = {}
@@ -81,40 +81,40 @@ def calculate_cosine_similarity(sentences, words):
                     similarities[first_sentence.position][second_sentence.position] = None
                     if first_sentence.position \
                         != second_sentence.position:
-						# Union of the bag of words of the two sentences
+                        # Union of the bag of words of the two sentences
                         bag_of_words = \
                             list(set(first_sentence.bag_of_words)
                                  | set(second_sentence.bag_of_words))
-						# Substitute each word with an array of it plus all its synonyms 
+                        # Substitute each word with an array of it plus all its synonyms 
                         bag_of_words = \
                             [list(set(words[word].synonym_list
                              + [word])) for word in bag_of_words]
-						# Calculate the vector for the first sentences by 
-						# counting occurances of every word plus its synonyms 
-						# from the bag of words in the sentence after stemming it
+                        # Calculate the vector for the first sentences by 
+                        # counting occurances of every word plus its synonyms 
+                        # from the bag of words in the sentence after stemming it
                         first_sentence_vector = [reduce(lambda x, y: x \
                                 + y, [[stemmer.stem(sentence_word)
                                 for sentence_word in
                                 first_sentence.bag_of_words].count(stemmer.stem(word))
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
-						# Calculate the vector for the second sentences by
-						# counting occurances of every word plus its synonyms
-						# from the bag of words in the sentence after stemming it
+                        # Calculate the vector for the second sentences by
+                        # counting occurances of every word plus its synonyms
+                        # from the bag of words in the sentence after stemming it
                         second_sentence_vector = [reduce(lambda x, y: x \
                                 + y, [[stemmer.stem(sentence_word)
                                 for sentence_word in
                                 second_sentence.bag_of_words].count(stemmer.stem(word))
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
-						# Calculate denominator according to the formula
+                        # Calculate denominator according to the formula
                         denominator = math.sqrt(reduce(lambda x, y: x \
                                 + y, map(lambda x: x * x,
                                 first_sentence_vector))) \
                             * math.sqrt(reduce(lambda x, y: x + y,
                                 map(lambda x: x * x,
                                 second_sentence_vector)))
-						# Calculate similarity between the two sentneces
+                        # Calculate similarity between the two sentneces
                         similarities[first_sentence.position][second_sentence.position] = \
                             reduce(lambda x, y: x + y, [first * second
                                    for (first, second) in
@@ -135,7 +135,8 @@ def calculate_number_of_clusters_based_on_ratio(sentences, percentage):
 Implementation of K-means algorithm using Lloyd's iterative approach:
 1. Randomly assign center sentences to the specified numnber of clusters
 2. Assign every sentence to a cluster based on the similarity measure
-3. Re-calculate thenew center of the clusters based on the accumulated similarity - the sentnence with the lowest accumulated similarity gets to be the center
+3. Re-calculate thenew center of the clusters based on the accumulated
+similarity - the sentnence with the lowest accumulated similarity gets to be the center
 4. Repeat 2 and 3 until there is no change between two consecutive iterations
 '''
 
@@ -178,7 +179,7 @@ def k_means(sentences, words, percentage):
                     if first_sentence != second_sentence:
                         accumulative_similarities[cluster_index][first_sentence] += \
                             similarities[first_sentence][second_sentence]
-            centers.append(min([(sentence_positon,
+            centers.append(max([(sentence_positon,
                            accumulative_similarities[cluster_index][sentence_positon])
                            for sentence_positon in
                            clusters[cluster_index]], key=lambda x: \
@@ -186,7 +187,7 @@ def k_means(sentences, words, percentage):
     return [centers, clusters]
 
 def cluster_based_summary(sentences, centers, clusters):
-	output = []
-	output.extend([sentence for sentence in sentences if sentence.position in centers])
-	output.sort(key=lambda sentence: sentence.position)
-	return output
+    output = []
+    output.extend([sentence for sentence in sentences if sentence.position in centers])
+    output.sort(key=lambda sentence: sentence.position)
+    return output
