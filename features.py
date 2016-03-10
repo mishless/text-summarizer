@@ -36,6 +36,7 @@ def keyword_feature(sentences, words):
 		for sentence in sentences:
 			if word in sentence.bag_of_words:
 				number_of_sentences += 1
+		number_of_sentences = 1 if (number_of_sentences == 0) else number_of_sentences  
 		words[word].set_term_weight(words[word].abs_frequency * math.log10(total_number_of_sentences/number_of_sentences))
 	for sentence in sentences:
 		sum_of_term_weights = 0
