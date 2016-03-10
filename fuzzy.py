@@ -104,18 +104,18 @@ def print_info(info):
             print(feature + ": " + str(sentence[feature]));
 
 #MAIN:
-test_stuff()
+# test_stuff()
 
-sentence1 = {'keyword' : 0.1, 'title_word' : 0.2,
-             'sentence_location': 0.3, 'sentence_length' : 0.4,
-             'proper_noun' : 0.5, 'cue_phrase' : 0.6,
-             'nonessential' : 0.7, 'numerical_data' : 0.8}
+# sentence1 = {'keyword' : 0.1, 'title_word' : 0.2,
+#              'sentence_location': 0.3, 'sentence_length' : 0.4,
+#              'proper_noun' : 0.5, 'cue_phrase' : 0.6,
+#              'nonessential' : 0.7, 'numerical_data' : 0.8}
 
-sentence2 = {'keyword' : 0.8, 'title_word' : 0.7,
-             'sentence_location': 0.6, 'sentence_length' : 0.5,
-             'proper_noun' : 0.4, 'cue_phrase' : 0.3,
-             'nonessential' : 0.2, 'numerical_data' : 0.1}
+# sentence2 = {'keyword' : 0.8, 'title_word' : 0.7,
+#              'sentence_location': 0.6, 'sentence_length' : 0.5,
+#              'proper_noun' : 0.4, 'cue_phrase' : 0.3,
+#              'nonessential' : 0.2, 'numerical_data' : 0.1}
 
-sentences = [sentence1, sentence2]
-output = fuzzify_sentences(sentences)
-print_info(output)
+# sentences = [sentence1, sentence2]
+# output = fuzzify_sentences(sentences)
+# print_info(output)
