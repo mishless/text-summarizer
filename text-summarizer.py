@@ -104,6 +104,7 @@ def main():
 		cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
 		stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
 		k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
+		summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
 		return 0
 	except KeyboardInterrupt:
 		### handle keyboard interrupt ###

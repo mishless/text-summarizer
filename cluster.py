@@ -184,3 +184,9 @@ def k_means(sentences, words, percentage):
                            clusters[cluster_index]], key=lambda x: \
                            x[1])[0])
     return [centers, clusters]
+
+def cluster_based_summary(sentences, centers, clusters):
+	output = []
+	output.extend([sentence for sentence in sentences if sentence.position in centers])
+	output.sort(key=lambda sentence: sentence.position)
+	return output
