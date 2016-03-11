@@ -105,9 +105,9 @@ def main():
         cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
         stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
         numerical_data_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'CD')
-        similarities = cluster.calculate_cosine_similarity(preprocessed_text[1], preprocessed_text[2])
-        k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
-        summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
+        # similarities = cluster.calculate_cosine_similarity(preprocessed_text[1], preprocessed_text[2])
+        # k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
+        # summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
 
         sentences_feature_list = []
         for (
@@ -139,6 +139,9 @@ def main():
             'nonessential': stigma_word_value,
             'numerical_data': numerical_data_value,
             })
+
+        fuzzied = fz.fuzzify_sentences(sentences_feature_list)
+        print(fuzzied[0])
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

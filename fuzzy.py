@@ -4,40 +4,67 @@
 
 mem_funcs = {}
 
-mem_funcs['keyword'] =           [{'start' :  -1, 'peak' :   0, 'end' :0.25},
-                                  {'start' :   0, 'peak' :0.25, 'end' :0.50},
-                                  {'start' :0.25, 'peak' :0.50, 'end' :0.75},
-                                  {'start' :0.50, 'peak' :0.75, 'end' :1.00},
-                                  {'start' :0.75, 'peak' :1.00, 'end' :2.00}]
+mem_funcs['keyword'] =           {'VL':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.25},
+                                  'L':
+                                    {'start' :   0, 'peak' :0.25, 'end' :0.50},
+                                  'M':
+                                    {'start' :0.25, 'peak' :0.50, 'end' :0.75},
+                                  'H':
+                                    {'start' :0.50, 'peak' :0.75, 'end' :1.00},
+                                  'VH':
+                                    {'start' :0.75, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['title_word'] =        [{'start' :  -1, 'peak' :   0, 'end' :0.25},
-                                  {'start' :   0, 'peak' :0.25, 'end' :1.00},
-                                  {'start' :0.25, 'peak' :1.00, 'end' :2.00}]                        
+mem_funcs['title_word'] =        {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.25},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.25, 'end' :1.00},
+                                  'H':
+                                    {'start' :0.25, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['sentence_location'] = [{'start' :  -1, 'peak' :   0, 'end' :   1},
-                                  {'start' :   0, 'peak' :   1, 'end' :   2}] 
+mem_funcs['sentence_location'] = {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :   1},
+                                  'H':
+                                    {'start' :   0, 'peak' :   1, 'end' :   2}} 
 
-mem_funcs['sentence_length'] =   [{'start' :  -1, 'peak' :   0, 'end' :0.25},
-                                  {'start' :   0, 'peak' :0.25, 'end' :0.50},
-                                  {'start' :0.25, 'peak' :0.50, 'end' :0.75},
-                                  {'start' :0.50, 'peak' :0.75, 'end' :1.00},
-                                  {'start' :0.75, 'peak' :1.00, 'end' :2.00}]
+mem_funcs['sentence_length'] =   {'VL':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.25},
+                                  'L':
+                                    {'start' :   0, 'peak' :0.25, 'end' :0.50},
+                                  'M':
+                                    {'start' :0.25, 'peak' :0.50, 'end' :0.75},
+                                  'H':
+                                    {'start' :0.50, 'peak' :0.75, 'end' :1.00},
+                                  'VH':
+                                    {'start' :0.75, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['proper_noun'] =       [{'start' :  -1, 'peak' :   0, 'end' :0.50},
-                                  {'start' :   0, 'peak' :0.50, 'end' :1.00},
-                                  {'start' :0.50, 'peak' :1.00, 'end' :2.00}]                        
+mem_funcs['proper_noun'] =       {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.50},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.50, 'end' :1.00},
+                                  'H':
+                                    {'start' :0.50, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['cue_phrase'] =        [{'start' :  -1, 'peak' :   0, 'end' :0.10},
-                                  {'start' :   0, 'peak' :0.10, 'end' :1.00},
-                                  {'start' :0.10, 'peak' :1.00, 'end' :2.00}]          
+mem_funcs['cue_phrase'] =        {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.10},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.10, 'end' :1.00},
+                                  'H':
+                                    {'start' :0.10, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['nonessential'] =      [{'start' :  -1, 'peak' :   0, 'end' :0.10},
-                                  {'start' :   0, 'peak' :0.10, 'end' :1.00},
-                                  {'start' :0.10, 'peak' :1.00, 'end' :2.00}]                        
+mem_funcs['nonessential'] =      {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.10},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.10, 'end' :1.00},
+                                  'H':
+                                    {'start' :0.10, 'peak' :1.00, 'end' :2.00}}
 
-mem_funcs['numerical_data'] =    [{'start' :  -1, 'peak' :   0, 'end' :0.50},
-                                  {'start' :   0, 'peak' :0.50, 'end' :1.00},
-                                  {'start' :0.50, 'peak' :1.00, 'end' :2.00}] 
+mem_funcs['numerical_data'] =    {'L':
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.50},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.50, 'end' :1.00},
+                                  'H':
+                                    {'start' :0.50, 'peak' :1.00, 'end' :2.00}}
 
 def get_line(zero, peak):
     k = 1/(peak-zero)
@@ -46,10 +73,10 @@ def get_line(zero, peak):
     return {'k': k, 'n' : n}
 
 def fuzzify_feature(val, feature):
-    ret_val = []
+    ret_val = {}
 
-    for func in mem_funcs[feature]:
-
+    for key in mem_funcs[feature]:
+        func = mem_funcs[feature][key]
         if val < func['start'] or val > func['end']:
             res = 0
 
@@ -61,7 +88,7 @@ def fuzzify_feature(val, feature):
 
             res = line['k'] * val + line['n'];
 
-        ret_val.append(res)
+        ret_val[key] = res
 
     return ret_val
 
@@ -103,7 +130,7 @@ def print_info(info):
         for feature in sentence:
             print(feature + ": " + str(sentence[feature]));
 
-#MAIN:
+# MAIN:
 # test_stuff()
 
 # sentence1 = {'keyword' : 0.1, 'title_word' : 0.2,
