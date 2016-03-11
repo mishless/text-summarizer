@@ -53,11 +53,11 @@ mem_funcs['cue_phrase'] =        {'L':
                                     {'start' :0.10, 'peak' :1.00, 'end' :2.00}}
 
 mem_funcs['nonessential'] =      {'L':
-                                    {'start' :  -1, 'peak' :   0, 'end' :0.10},
+                                    {'start' :  -1, 'peak' :   0, 'end' :0.05},
                                   'M':
-                                    {'start' :   0, 'peak' :0.10, 'end' :1.00},
+                                    {'start' :   0, 'peak' :0.05, 'end' :1.00},
                                   'H':
-                                    {'start' :0.10, 'peak' :1.00, 'end' :2.00}}
+                                    {'start' :0.05, 'peak' :1.00, 'end' :2.00}}
 
 mem_funcs['numerical_data'] =    {'L':
                                     {'start' :  -1, 'peak' :   0, 'end' :0.50},
