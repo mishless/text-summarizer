@@ -192,9 +192,17 @@ def get_fuzzy_rank(sentence):
 
 
 def print_everything(almost_originals, sentences):
-    for (almost_original, sentence) in zip(almost_originals, sentences):
+
+    
+    rank_results = get_fuzzy_ranks(sentences)
+    something = zip(almost_originals, rank_results)
+    rank_sort_results = sorted(something, key= lambda x: x[1][1], reverse=True)
+
+    for ranked_element in rank_sort_results:
+        sentence = ranked_element[1][0]
+
         print("******************************")
-        print(almost_original.original)
+        print(ranked_element[0].original)
 
         print("\nFeatures:")
         for key in sentence:
@@ -204,7 +212,7 @@ def print_everything(almost_originals, sentences):
 
         rl.print_rules_results(fuzzify_sentence(sentence))
 
-        print("\nFinal value: " + "%.2f" % get_fuzzy_rank(sentence))
+        print("\nFinal value: " + "%.3f" % ranked_element[1][1])
         print("")
         
 def get_fuzzy_ranks(sentences):
