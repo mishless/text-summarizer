@@ -215,14 +215,10 @@ def print_everything(almost_originals, sentences):
         print("\nFinal value: " + "%.3f" % ranked_element[1][1])
         print("")
         
-def get_fuzzy_ranks(sentences):
+def set_fuzzy_ranks(sentence_object, sentences):
 
-    ret_val = []
-
-    for sentence in sentences:
-        ret_val.append((sentence, get_fuzzy_rank(sentence)))
-
-    return ret_val
+    for (sen_obj,sentence) in zip(sentence_object, sentences):
+        sen_obj.rank = get_fuzzy_rank(sentence)
 
 # MAIN:
 # test_stuff()

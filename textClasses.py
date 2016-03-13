@@ -18,10 +18,10 @@ class Word:
 
 
 class Sentence:
-    def __init__(self, original, position, rank, bag_of_words, ending_char):
+    def __init__(self, original, position, bag_of_words, ending_char):
         self.original = original
         self.position = position
-        self.rank = rank
+        self.rank = 0
         self.bag_of_words = bag_of_words
         self.ending_char = ending_char
 
@@ -29,8 +29,8 @@ class Sentence:
     def rank(self):
         return self.__rank if self.__rank else 0
     
-    @term_weight.setter
-    def term_weight(self, val):
+    @rank.setter
+    def rank(self, val):
         self.__rank = val
 
 class Title:

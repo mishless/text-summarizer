@@ -45,7 +45,7 @@ def pre_process_text(text):
 
     #Pre-process text
     for detected_sentence in detected_sentences:
-        sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, 0, [], None))
+        sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], None))
         tokens = nltk.word_tokenize(sentences[-1].original)
         tokens = [token for token in tokens if token not in stopwords_list]
         part_of_speech = nltk.pos_tag(tokens)
@@ -158,9 +158,14 @@ def main():
 
         #fuzzied = fz.fuzzify_sentences(sentences_feature_list)
         #print_stuff(preprocessed_text[1], sentences_feature_list)
-        #fuzzy_ranks = fz.get_fuzzy_ranks(sentences_feature_list)
+        fz.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
+        # for obj in preprocessed_text[1]:
+        #     print("***************************")
+        #     print("Sentence: " + obj.original)
+        #     print("Rank: " + str(obj.rank))
+
         #print(fuzzy_ranks)
-        fz.print_everything(preprocessed_text[1], sentences_feature_list)
+        #fz.print_everything(preprocessed_text[1], sentences_feature_list)
 
         return 0
     except KeyboardInterrupt:
