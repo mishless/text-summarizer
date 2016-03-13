@@ -106,6 +106,15 @@ def print_stuff(sentences, sentences_features):
         rl.print_rules_results(data[i])
 
 
+def print_based_on_fuzzy(angels_objects, p):
+    number_sentences = math.floor(p * len(angels_objects))
+    sorted_by_rank = [element for element in sorted(angels_objects, 
+        key=lambda x: x.rank, reverse=True)][0:number_sentences]
+    vukans_list = sorted(sorted_by_rank, key=lambda x: x.position, reverse=False)
+    for sentence in vukans_list:
+        print(sentence.original)
+        print("")
+
 def main():
     try:
         processed_input = process_input()
@@ -157,7 +166,7 @@ def main():
             })
 
         #fuzzied = fz.fuzzify_sentences(sentences_feature_list)
-        #print_stuff(preprocessed_text[1], sentences_feature_list)
+        fz.print_everything(preprocessed_text[1], sentences_feature_list)
         fz.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
         # for obj in preprocessed_text[1]:
         #     print("***************************")
@@ -166,6 +175,9 @@ def main():
 
         #print(fuzzy_ranks)
         #fz.print_everything(preprocessed_text[1], sentences_feature_list)
+
+        print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
+
 
         return 0
     except KeyboardInterrupt:

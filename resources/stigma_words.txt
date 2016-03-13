@@ -1,5 +1,4 @@
 bad
-common
 crudede
 testable
 ignorant
@@ -22,7 +21,6 @@ second-rate
 unnoteworthy
 unworthy
 believable
-common
 dark
 disagreeable
 dull
@@ -81,8 +79,8 @@ unknown
 unremarkable
 unrespected
 unimpressive
-common
 standard
 unextraordinary
 details
 also
+example

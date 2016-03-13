@@ -205,20 +205,35 @@ def print_everything(almost_originals, sentences):
         print(ranked_element[0].original)
 
         print("\nFeatures:")
-        for key in sentence:
-            print("\t" + "%20s" % key + ": " + "%.2f " % sentence[key])
+
+        fuzzified = fuzzify_sentence(sentence)
+        for key in fuzzified:
+            print("\t" + "%20s" % key + ": ", end = "")
+            for key2 in fuzzified[key]:
+                print(" %2s: " % key2 + "%.2f" % fuzzified[key][key2], end = "")
+            print("")
 
         print("\nRules:")
 
         rl.print_rules_results(fuzzify_sentence(sentence))
 
         print("\nFinal value: " + "%.3f" % ranked_element[1][1])
+        print("Rank: (%d / %d)" % (1 + rank_sort_results.index(ranked_element),
+              len(rank_sort_results)))
         print("")
         
 def set_fuzzy_ranks(sentence_object, sentences):
 
     for (sen_obj,sentence) in zip(sentence_object, sentences):
         sen_obj.rank = get_fuzzy_rank(sentence)
+
+def get_fuzzy_ranks(sentences):
+
+    ret_val = []
+    for sentence in sentences:
+        ret_val.append((sentence, get_fuzzy_rank(sentence)))
+
+    return ret_val
 
 # MAIN:
 # test_stuff()
