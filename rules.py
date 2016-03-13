@@ -28,5 +28,5 @@ def do_inference(sentences):
 def print_rules_results(sentence):
     
     for key in rules:
-        print("\t" + "%3s" % key + ": " + str(calculate_rule(sentence, rules[key])))
+        print("\t" + "%3s" % key + ": " + "%.2f" % calculate_rule(sentence, rules[key]))
 

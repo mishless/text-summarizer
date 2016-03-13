@@ -3,7 +3,6 @@
 # Copyright: Ask Mihaela
 
 import rules as rl
-import matplotlib.pyplot as plt
 
 mem_funcs = {}
 
@@ -191,6 +190,23 @@ def get_fuzzy_rank(sentence):
 
     return center_of_gravity(max_rules)
 
+
+def print_everything(almost_originals, sentences):
+    for (almost_original, sentence) in zip(almost_originals, sentences):
+        print("******************************")
+        print(almost_original.original)
+
+        print("\nFeatures:")
+        for key in sentence:
+            print("\t" + "%20s" % key + ": " + "%.2f " % sentence[key])
+
+        print("\nRules:")
+
+        rl.print_rules_results(fuzzify_sentence(sentence))
+
+        print("\nFinal value: " + "%.2f" % get_fuzzy_rank(sentence))
+        print("")
+        
 def get_fuzzy_ranks(sentences):
 
     ret_val = []

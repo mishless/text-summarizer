@@ -90,15 +90,6 @@ def resource_loader():
         resources[resource_file_name.split('.')[0]] = text.split('\n')
     return resources
 
-def print_sentence_info(sentence):
-    print("Features: ")
-    fuzzied = 2
-    for feature in data[i]:
-        print("\t" + "%20s" % feature + ": ", end = "")
-        for mem in data[i][feature]:
-            print("%3s" % mem + "=%.2f " % data[i][feature][mem], end="")
-        print("")
-
 def print_stuff(sentences, sentences_features):
 
     data = sentences_features
@@ -167,8 +158,9 @@ def main():
 
         #fuzzied = fz.fuzzify_sentences(sentences_feature_list)
         #print_stuff(preprocessed_text[1], sentences_feature_list)
-        fuzzy_ranks = fz.get_fuzzy_ranks(sentences_feature_list)
-        print(fuzzy_ranks)
+        #fuzzy_ranks = fz.get_fuzzy_ranks(sentences_feature_list)
+        #print(fuzzy_ranks)
+        fz.print_everything(preprocessed_text[1], sentences_feature_list)
 
         return 0
     except KeyboardInterrupt:
