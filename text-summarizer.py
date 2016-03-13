@@ -6,17 +6,15 @@ import string
 import math
 import features
 import traceback
+import time
+import argparse
+import nltk.corpus
+import nltk.stem.porter
+
 import textClasses as tc 
-
-from argparse import ArgumentParser
-from nltk.corpus import stopwords
-from nltk.stem.porter import *
-from nltk.corpus import wordnet as wn
-from functools import reduce
-
 import cluster
-import fuzzy as fz
-import rules as rl
+import fuzzy
+import rules
 
 CUE_PHRASE_FILE = 'bonus_words'
 STIGMA_WORDS_FILE = 'stigma_words'
@@ -30,8 +28,8 @@ def pre_process_text(text):
     
     sentence_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     detected_sentences = sentence_detector.tokenize(text.strip())
-    stopwords_list = stopwords.words('english')
-    stemmer = PorterStemmer()
+    stopwords_list = nltk.corpus.stopwords.words('english')
+    stemmer = nltk.stem.porter.PorterStemmer()
     
     #Pre-process title
     tokens = nltk.word_tokenize(title.original)
@@ -40,7 +38,7 @@ def pre_process_text(text):
     for (token, word_pos) in zip(tokens, part_of_speech):
         token = token.lower()
         if (token not in words) and (token not in list(string.punctuation) and (token not in stopwords_list)):
-                words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+                words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
         title.bag_of_words.append(token)
 
     #Pre-process text
@@ -53,7 +51,7 @@ def pre_process_text(text):
             token = token.lower()
             if (token not in list(string.punctuation) and (token not in stopwords_list)):
                 if (token not in words):
-                    words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in wn.synsets(token) for lemma in synset.lemma_names()])
+                    words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
                 elif token in words:
                     words[token].increment_abs_frequency()
                 sentences[-1].bag_of_words.append(token)
@@ -64,20 +62,22 @@ def process_input(argv=None):
         argv = sys.argv
     else:
         sys.argv.extend(argv)
-    parser = ArgumentParser()
-    parser.add_argument("-t", "--text-file", dest="text_file", help="the file containing the text tom be summarized", required=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--text-file", dest="text_file", help="the file containing the text tom be summarized", required=True)
     parser.add_argument("-p", "--percent", dest="percentage", help="the compression rate as percentage", required=True)
-
+    parser.add_argument("-t", "--threads", dest="threads", help="the number of threads", required=True)
+    
     # Process arguments
     args = parser.parse_args()
 
+    threads = args.threads
     percentage = args.percentage
     text_file = args.text_file
     with open(text_file, 'r') as f:
         text = f.read()
     f.closed
 
-    return {"text": text, "percentage": percentage}
+    return {"text": text, "percentage": percentage, "threads": threads}
 
 def resource_loader():
     resources = dict()
@@ -103,7 +103,7 @@ def print_stuff(sentences, sentences_features):
         print_sentence_info(data[i])
 
         print("Rules: ")
-        rl.print_rules_results(data[i])
+        rules.print_rules_results(data[i])
 
 
 def print_based_on_fuzzy(angels_objects, p):
@@ -117,9 +117,12 @@ def print_based_on_fuzzy(angels_objects, p):
 
 def main():
     try:
+        start_time = time.time()
+
         processed_input = process_input()
         text = processed_input['text']
         percentage = processed_input['percentage']
+        threads = int(processed_input['threads'])
         resources = resource_loader()
         preprocessed_text = pre_process_text(text)
         keyword_feature_value = features.keyword_feature(preprocessed_text[1], preprocessed_text[2])
@@ -130,8 +133,7 @@ def main():
         cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
         stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
         numerical_data_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'CD')
-        # similarities = cluster.calculate_cosine_similarity(preprocessed_text[1], preprocessed_text[2])
-        # k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage)
+        k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage, threads)
         # summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
 
         sentences_feature_list = []
@@ -166,19 +168,19 @@ def main():
             })
 
         #fuzzied = fz.fuzzify_sentences(sentences_feature_list)
-        fz.print_everything(preprocessed_text[1], sentences_feature_list)
-        fz.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
+        fuzzy.print_everything(preprocessed_text[1], sentences_feature_list)
+        #fuzzied = fuzzy.fuzzify_sentences(sentences_feature_list)
+        #print_stuff(preprocessed_text[1], sentences_feature_list)
+        fuzzy.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
         # for obj in preprocessed_text[1]:
         #     print("***************************")
         #     print("Sentence: " + obj.original)
         #     print("Rank: " + str(obj.rank))
-
+        #fuzzy_ranks = fuzzy.get_fuzzy_ranks(sentences_feature_list)
         #print(fuzzy_ranks)
-        #fz.print_everything(preprocessed_text[1], sentences_feature_list)
-
+        #fuzzy.print_everything(preprocessed_text[1], sentences_feature_list)
         print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
-
-
+        print("Total time: {} seconds.".format(time.time()- start_time))
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

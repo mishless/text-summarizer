@@ -2,54 +2,11 @@
 # -*- coding: utf-8 -*-
 import math
 import random
+import time
+import threading
 
 from nltk.stem.porter import *
 from functools import reduce
-
-def calculate_similarities(sentences, words):
-    similarities = dict()
-    max_words_in_common = 1
-    max_synonyms_in_common = 1
-    for first_sentence in sentences:
-        if first_sentence.position not in similarities:
-            similarities[first_sentence.position] = dict()
-            for second_sentence in sentences:
-                if second_sentence.position \
-                    not in similarities[first_sentence.position]:
-                    similarities[first_sentence.position][second_sentence.position] = \
-                        None
-                    if first_sentence.position \
-                        != second_sentence.position:
-                        words_in_common = 0
-                        synonyms_in_common = 0
-                        for word in first_sentence.bag_of_words:
-                            for second_word in \
-                                second_sentence.bag_of_words:
-                                if words[word].stem \
-                                    == words[second_word].stem:
-                                    words_in_common += 1
-                                if word != second_word:
-                                    if word \
-    in words[second_word].synonym_list:
-                                        synonyms_in_common += 1
-                                    if second_word \
-    in words[word].synonym_list:
-                                        synonyms_in_common += 1
-                        similarities[first_sentence.position][second_sentence.position] = \
-                            [words_in_common, synonyms_in_common]
-                        if words_in_common > max_words_in_common:
-                            max_words_in_common = words_in_common
-                        if synonyms_in_common > max_synonyms_in_common:
-                            max_synonyms_in_common = synonyms_in_common
-    for first_sentence in sentences:
-        for second_sentence in sentences:
-            if first_sentence.position != second_sentence.position:
-                similarities[first_sentence.position][second_sentence.position] = \
-                    similarities[first_sentence.position][second_sentence.position][0] \
-                    / max_words_in_common \
-                    + similarities[first_sentence.position][second_sentence.position][1] \
-                    / max_synonyms_in_common
-    return similarities
 
 '''
 Method to calculate the cosine similarity between all pairs of sentences 
@@ -68,23 +25,26 @@ occurs in the sentence (or its synonym).
 cos(a, b) = sum(a*b)/sqrt(sum(a^2))*sqrt(sum(b^2))
 6. Similarities are saved in a 2d array
 ''' 
-def calculate_cosine_similarity(sentences, words):
-    stemmer = PorterStemmer()
+def cosine_similarity_thread_run(number_of_thread, number_of_sentences, sentences, words, stemmer, results):
+    start_time = time.time()
     similarities = {}
-    # For every pair of sentences initialize the similarity to None
-    for first_sentence in sentences:
-        if first_sentence.position not in similarities:
-            similarities[first_sentence.position] = {}
-            for second_sentence in sentences:
-                if second_sentence.position \
-                    not in similarities[first_sentence.position]:
-                    similarities[first_sentence.position][second_sentence.position] = None
-                    if first_sentence.position \
-                        != second_sentence.position:
+    start_sentence_position = number_of_thread * number_of_sentences
+    end_sentence_position = (number_of_thread + 1) * number_of_sentences
+    if end_sentence_position > len(sentences):
+        end_sentence_position = len(sentences)
+    #print("Number of thread: {} Start_position: {} End Position: {}".format(number_of_thread, 
+    #                           start_sentence_position, end_sentence_position))
+    for sentence_position in range(start_sentence_position, end_sentence_position):
+        if sentences[sentence_position].position not in similarities:
+            similarities[sentences[sentence_position].position] = {}
+            for sentence in sentences:
+                if sentence.position not in similarities[sentences[sentence_position].position]:
+                    similarities[sentences[sentence_position].position][sentence.position] = None
+                    if sentences[sentence_position].position != sentence.position:
                         # Union of the bag of words of the two sentences
                         bag_of_words = \
-                            list(set(first_sentence.bag_of_words)
-                                 | set(second_sentence.bag_of_words))
+                            list(set(sentences[sentence_position].bag_of_words)
+                                 | set(sentence.bag_of_words))
                         # Substitute each word with an array of it plus all its synonyms 
                         bag_of_words = \
                             [list(set(words[word].synonym_list
@@ -95,7 +55,7 @@ def calculate_cosine_similarity(sentences, words):
                         first_sentence_vector = [reduce(lambda x, y: x \
                                 + y, [[stemmer.stem(sentence_word)
                                 for sentence_word in
-                                first_sentence.bag_of_words].count(stemmer.stem(word))
+                                sentences[sentence_position].bag_of_words].count(stemmer.stem(word))
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
                         # Calculate the vector for the second sentences by
@@ -104,7 +64,7 @@ def calculate_cosine_similarity(sentences, words):
                         second_sentence_vector = [reduce(lambda x, y: x \
                                 + y, [[stemmer.stem(sentence_word)
                                 for sentence_word in
-                                second_sentence.bag_of_words].count(stemmer.stem(word))
+                                sentence.bag_of_words].count(stemmer.stem(word))
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
                         # Calculate denominator according to the formula
@@ -115,12 +75,32 @@ def calculate_cosine_similarity(sentences, words):
                                 map(lambda x: x * x,
                                 second_sentence_vector)))
                         # Calculate similarity between the two sentneces
-                        similarities[first_sentence.position][second_sentence.position] = \
+                        similarities[sentences[sentence_position].position][sentence.position] = \
                             reduce(lambda x, y: x + y, [first * second
                                    for (first, second) in
                                    zip(first_sentence_vector,
                                    second_sentence_vector)]) \
                             / denominator
+    #print("Thread {} took {} seconds to finish.".format(number_of_thread, time.time() - start_time))
+    results[number_of_thread] = similarities
+
+def calculate_cosine_similarity(sentences, words, number_of_threads):
+    stemmer = PorterStemmer()
+    similarities = {}
+    # For every pair of sentences initialize the similarity to None
+    start_time =time.time()
+    threads = []
+    results = [None] * number_of_threads
+    number_of_sentences = math.ceil(len(sentences)/number_of_threads)
+    for number_of_thread in range(0, number_of_threads):
+        threads.append(threading.Thread(name='Thread#{}'.format(number_of_thread), target=cosine_similarity_thread_run,args=(number_of_thread, number_of_sentences, sentences, words, stemmer, results)))
+    for number_of_thread in range(0, number_of_threads):
+        threads[number_of_thread].start()
+    for number_of_thread in range(0, number_of_threads):
+        threads[number_of_thread].join()
+    for number_of_thread in range(0, number_of_threads):
+        similarities.update(results[number_of_thread])
+    #print("Calculating cosine similarity took {} seconds.".format(time.time() - start_time))
     return similarities
 
 def calculate_number_of_clusters(sentences, words):
@@ -140,8 +120,8 @@ similarity - the sentnence with the lowest accumulated similarity gets to be the
 4. Repeat 2 and 3 until there is no change between two consecutive iterations
 '''
 
-def k_means(sentences, words, percentage):
-    similarities = calculate_cosine_similarity(sentences, words)
+def k_means(sentences, words, percentage, number_of_threads):
+    similarities = calculate_cosine_similarity(sentences, words, number_of_threads)
     number_of_clusters = \
         calculate_number_of_clusters_based_on_ratio(sentences,
             percentage)
@@ -152,7 +132,7 @@ def k_means(sentences, words, percentage):
         old_center = centers
 
         # Put every sentence in the correct cluster
-
+        start_time = time.time()
         clusters = {}
         for sentence in sentences:
             best_cluster_center = max([(center[0],
@@ -163,9 +143,10 @@ def k_means(sentences, words, percentage):
                 clusters[best_cluster_center].append(sentence.position)
             elif best_cluster_center not in clusters:
                 clusters[best_cluster_center] = [sentence.position]
+        #print("Assigning of clusters took {} seconds.".format(time.time() - start_time))
 
         # Re-evaluate the new centers of the clusters
-
+        start_time = time.time()
         accumulative_similarities = {}
         old_centers = centers
         centers = []
@@ -184,6 +165,7 @@ def k_means(sentences, words, percentage):
                            for sentence_positon in
                            clusters[cluster_index]], key=lambda x: \
                            x[1])[0])
+        #print("Re-evaluating new centers took {} seconds.".format(time.time() - start_time))
     return [centers, clusters]
 
 def cluster_based_summary(sentences, centers, clusters):
