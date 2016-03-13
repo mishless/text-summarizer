@@ -11,8 +11,12 @@ rules = {'I1': lambda data: min(max(data['keyword']['VH'], data['keyword']['H'])
          'I4': lambda data: min(max(data['keyword']['VH'], data['keyword']['H']), max(data['sentence_length']['H'], data['sentence_length']['VH']), max(data['numerical_data']['M'], data['numerical_data']['H']), max(data['proper_noun']['M'], data['proper_noun']['H']))}
 
 
-def calculate_all_rules(sentences):
-    koliko = 0;
+def calculate_all_rules(sentence):
+    result = {}
+    for rule_key in rules:
+        result[rule_key] = calculate_rule(sentence, rules[rule_key])
+
+    return result
 
 def calculate_rule(sentence, rule):
     return rule(sentence)
@@ -25,3 +29,4 @@ def print_rules_results(sentence):
     
     for key in rules:
         print("\t" + "%3s" % key + ": " + str(calculate_rule(sentence, rules[key])))
+

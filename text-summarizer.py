@@ -16,6 +16,7 @@ from functools import reduce
 
 import cluster
 import fuzzy as fz
+import rules as rl
 
 CUE_PHRASE_FILE = 'bonus_words'
 STIGMA_WORDS_FILE = 'stigma_words'
@@ -89,6 +90,30 @@ def resource_loader():
         resources[resource_file_name.split('.')[0]] = text.split('\n')
     return resources
 
+def print_sentence_info(sentence):
+    print("Features: ")
+    fuzzied = 2
+    for feature in data[i]:
+        print("\t" + "%20s" % feature + ": ", end = "")
+        for mem in data[i][feature]:
+            print("%3s" % mem + "=%.2f " % data[i][feature][mem], end="")
+        print("")
+
+def print_stuff(sentences, sentences_features):
+
+    data = sentences_features
+
+    for i in range(0, len(data)):
+        print("******************************")
+
+        print("Sentence: ", end="")        
+        print(sentences[i].original)
+
+        print_sentence_info(data[i])
+
+        print("Rules: ")
+        rl.print_rules_results(data[i])
+
 
 def main():
     try:
@@ -140,8 +165,11 @@ def main():
             'numerical_data': numerical_data_value,
             })
 
-        fuzzied = fz.fuzzify_sentences(sentences_feature_list)
-        print(fuzzied[0])
+        #fuzzied = fz.fuzzify_sentences(sentences_feature_list)
+        #print_stuff(preprocessed_text[1], sentences_feature_list)
+        fuzzy_ranks = fz.get_fuzzy_ranks(sentences_feature_list)
+        print(fuzzy_ranks)
+
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

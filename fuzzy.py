@@ -2,6 +2,9 @@
 # Authors: Us
 # Copyright: Ask Mihaela
 
+import rules as rl
+import matplotlib.pyplot as plt
+
 mem_funcs = {}
 
 mem_funcs['keyword'] =           {'VL':
@@ -66,6 +69,13 @@ mem_funcs['numerical_data'] =    {'L':
                                   'H':
                                     {'start' :0.50, 'peak' :1.00, 'end' :2.00}}
 
+output_funcs =                   {'L':
+                                    {'start' :-0.5, 'peak' :   0, 'end' :0.50},
+                                  'M':
+                                    {'start' :   0, 'peak' :0.50, 'end' :1.00},
+                                  'I':
+                                    {'start' :0.50, 'peak' :1.00, 'end' :1.50}}
+
 def get_line(zero, peak):
     k = 1/(peak-zero)
     n = -k * zero
@@ -113,22 +123,82 @@ def fuzzify_sentences(sentences):
 def print_line(line):
     print("(k, n) = (" + str(line['k']) + ", " + str(line['n']) + ")")
 
-def test_stuff():
-
-    return
-    print("Expected (1, 0)")
-    print_line(get_line(0, 1))
-    print("Expected (1, -5)")
-    print_line(get_line(5, 6))
-    print("Expected (-1, 2)")
-    print_line(get_line(2,1))
-    exit()
-
 def print_info(info):
     for sentence in info:
         print("*******************");
         for feature in sentence:
             print(feature + ": " + str(sentence[feature]));
+
+def get_max_rules(sentence):
+    max_rules = {'I' : 0, 'M' : 0, 'L' : 0}
+    
+    fuzzified_sentence = fuzzify_sentence(sentence)
+    rule_results = rl.calculate_all_rules(fuzzified_sentence)
+
+
+    for rule_key in rule_results:
+        if max_rules[rule_key[0]] < rule_results[rule_key]:            
+            max_rules[rule_key[0]] = rule_results[rule_key]  
+
+    return max_rules
+
+def get_output_function_val(key, x):
+
+    ofun = output_funcs[key]
+
+    if x < ofun['start'] or x > ofun['end']:
+        return 0
+
+    else:
+        if x < ofun['peak']:
+            line = get_line(ofun['start'], ofun['peak'])
+        else:
+            line = get_line(ofun['end'], ofun['peak'])
+
+        return line['k'] * x + line['n'];        
+
+def get_output_val(x, key, maximum):
+    return min(maximum, get_output_function_val(key,x))
+
+def get_aggregated_value(x, max_rules):
+
+    output_vals = []
+    for key in max_rules:
+        output_vals.append(get_output_val(x, key, max_rules[key]))
+
+    return max(output_vals)
+
+def center_of_gravity(max_rules):
+    dx = 0.01
+    x_vals = []
+    y_vals = []
+
+    for i in range(0, int(1/dx) + 1):
+        x_vals.append(dx*i)
+
+    for x in x_vals:
+        y_vals.append(get_aggregated_value(x, max_rules))
+
+    summ = 0
+    for i in range(0, len(y_vals)):
+        summ += y_vals[i] * x_vals[i]
+
+    return summ/sum(y_vals) 
+
+def get_fuzzy_rank(sentence):
+
+    max_rules = get_max_rules(sentence)
+
+    return center_of_gravity(max_rules)
+
+def get_fuzzy_ranks(sentences):
+
+    ret_val = []
+
+    for sentence in sentences:
+        ret_val.append((sentence, get_fuzzy_rank(sentence)))
+
+    return ret_val
 
 # MAIN:
 # test_stuff()
