@@ -3,6 +3,7 @@
 # Copyright: Ask Mihaela
 
 import rules as rl
+import numpy
 
 mem_funcs = {}
 
@@ -172,8 +173,10 @@ def center_of_gravity(max_rules):
     x_vals = []
     y_vals = []
 
-    for i in range(0, int(1/dx) + 1):
-        x_vals.append(dx*i)
+    integration_start = -0.5
+    integration_end = 1.5
+
+    x_vals = list(numpy.arange(integration_start, integration_end, dx))
 
     for x in x_vals:
         y_vals.append(get_aggregated_value(x, max_rules))
