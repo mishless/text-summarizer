@@ -1,186 +1,47 @@
 significant
-big
 consequential
 considerable
 meaningful
-momentous
-notable
-noteworthy
 serious
 substantial
 vital
-heavy material
-carrying a lot of weight
 excellent
-superior
 accomplished
-admirable
-attractive
 distinguished
 еxceptional
 exemplary
-exquisite
-fine
-finest
-first-rate
-good
-great
-magnificent
 outstanding
-skillful
-sterling
-superb
-superlative
-champion
-choice
-choicest
 desirable
 distinctive
 estimable
 first
-first-class
 high
 incomparable
 invaluable
 meritorious
 notable
-noted
-peerless
-piked
-premium
-priceless
 prime
-select
 striking
 supreme
-tiptop
-top-notch
-ranscendent
-world-class
-wonderful
-admirable
-amazing
-astonishing
-awesome
-brilliant
-cool
-enjoyable
-excellent
-fabulous
-fantastic
-fine
-incredible
-magnificent
-marvelous
-outstanding
-phenomenal
-pleasant
-pleasing
+transcendent
 remarkable
-sensational
-strange
-superb
-surprising
-terrific
-tremendous
-wondrous
-astounding
-awe-inspiring
-divine
-dynamite
-groovy
-miraculous
-peachy
 prime
-something else
-staggering
-tling
-stupendous
-super
-swell
-too much
-unheard-of
 substantial
-consequential
-considerable
-extraordinary
-generous
-hefty
-large
-massive
-meaningful
-serious
-significant
-sizable
-solid
-steady
-strong
-valuable
-abundant
-big-deal
-bulky
-durable
-goodly
-heavyweight
 key
-major-league
-plentiful
 principal
-stable
-superabundant
-tidy
-weighty
-well-built
-worthwhile
-distinguished
 acclaimed
 brilliant
-dignified
 eminent
-esteemed
-famed
-great
-honored
-illustrious
-noble
-notable
-noted
-prominent
-remarkable
 renowned
-reputable
-venerable
 well-known
-arresting
-celebrated
-imposing
-marked
-shining
-striking
-aristocratic
-big name
-conspicuous
-especial
-extraordinary
-foremost
-glorious
-highly regarded
-memorable
-nonpareil
 noteworthy
-peerless
-royal
-salient
 singular
 special
-stately
-superior
 talked of
 unforgettable
 important
 famous
 interesting
-eminent
 influential
 the best
 good
@@ -192,3 +53,33 @@ aim
 must
 critical
 in fact
+examines the role of
+explores why
+investigates the effects of
+assesses the impact
+investigated the role of
+outline how
+introduce the concept
+extend prior work
+examine the relationship between
+identify
+evaluate these
+motivated
+hypoth
+thesis
+indicates
+explain
+answer
+remember
+consequently
+in addition 
+however
+in other words
+brief
+moreover
+meanwhile
+sum up
+nevertheless
+nonetheless
+relevant
+

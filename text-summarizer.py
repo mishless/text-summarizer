@@ -22,7 +22,7 @@ STIGMA_WORDS_FILE = 'stigma_words'
 def pre_process_text(text):
     text = text.split('\n', 1)
     title = tc.Title(text[0], [])
-    text = text[1]
+    text = text[1].replace(u"\u2018", '\'').replace(u"\u2019", '\'').replace(u"\u201c",'"').replace(u"\u201d", '"')
     words = dict()
     sentences = []
     
@@ -43,19 +43,21 @@ def pre_process_text(text):
 
     #Pre-process text
     for detected_sentence in detected_sentences:
-        sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
+        
         tokens = nltk.word_tokenize(sentences[-1].original)
         tokens = [token for token in tokens if token not in stopwords_list]
-        part_of_speech = nltk.pos_tag(tokens)
-        for (token, word_pos) in zip(tokens, part_of_speech):
-            token = token.lower()
-            if (token not in list(string.punctuation) and (token not in stopwords_list)):
-                if (token not in words):
-                    words[token] = tc.Word(stemmer.stem(token), word_pos, [(lemma, stemmer.stem(lemma)) for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
-                elif token in words:
-                    words[token].increment_abs_frequency()
-                sentences[-1].bag_of_words.append(token)
-                sentences[-1].stemmed_bag_of_words.append(stemmer.stem(token))
+        if tokens:
+            sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
+            part_of_speech = nltk.pos_tag(tokens)
+            for (token, word_pos) in zip(tokens, part_of_speech):
+                token = token.lower()
+                if (token not in list(string.punctuation) and (token not in stopwords_list)):
+                    if (token not in words):
+                        words[token] = tc.Word(stemmer.stem(token), word_pos, [(lemma, stemmer.stem(lemma)) for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
+                    elif token in words:
+                        words[token].increment_abs_frequency()
+                    sentences[-1].bag_of_words.append(token)
+                    sentences[-1].stemmed_bag_of_words.append(stemmer.stem(token))
     return [title, sentences, words]
 
 def process_input(argv=None):
@@ -88,7 +90,7 @@ def resource_loader():
         with open(path + "/"+resource_file_name, 'r') as f:
             text = f.read()
         f.closed
-        resources[resource_file_name.split('.')[0]] = text.split('\n')
+        resources[resource_file_name.split('.')[0]] = set(list(text.split('\n')))
     return resources
 
 def print_stuff(sentences, sentences_features):
