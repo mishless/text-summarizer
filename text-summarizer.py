@@ -108,6 +108,29 @@ def print_stuff(sentences, sentences_features):
         print("Rules: ")
         rules.print_rules_results(data[i])
 
+def filter_using_clusters(sentences, percentage, clusters):
+    print(clusters)
+    number_sentences = math.floor(percentage * len(sentences))
+    sentences = sorted(sentences, key=lambda x: x.rank, reverse=True)
+    clusters_counter = [0] * len(clusters)
+    sentence_counter = 0;
+    chosen_sentences = []
+    while len(chosen_sentences) < number_sentences:
+        sentence_counter = 0
+        for i in range(0, len(clusters)):
+            for j in range(0, len(sentences)):
+                if (clusters_counter[i] == min(clusters_counter) and clusters[i].count(sentences[j].position) == 1):
+                    chosen_sentences.append(sentences[j])
+                    clusters[i].remove(sentences[j].position)
+                    if (len(clusters[i]) == 0):
+                        clusters_counter[i] = sys.maxsize
+                    else:
+                        clusters_counter[i] += 1
+                    break;
+    chosen_sentences = sorted(chosen_sentences, key=lambda x: x.position)
+    for sentence in chosen_sentences:
+        print(sentence.original)
+    return chosen_sentences
 
 def print_based_on_fuzzy(angels_objects, p):
     number_sentences = math.floor(p * len(angels_objects))
@@ -175,6 +198,7 @@ def main():
         #fuzzied = fuzzy.fuzzify_sentences(sentences_feature_list)
         #print_stuff(preprocessed_text[1], sentences_feature_list)
         fuzzy.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
+        filter_using_clusters(preprocessed_text[1], float(percentage)/100, k_means_result[1])
         # for obj in preprocessed_text[1]:
         #     print("***************************")
         #     print("Sentence: " + obj.original)
@@ -182,7 +206,7 @@ def main():
         #fuzzy_ranks = fuzzy.get_fuzzy_ranks(sentences_feature_list)
         #print(fuzzy_ranks)
         #fuzzy.print_everything(preprocessed_text[1], sentences_feature_list)
-        print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
+        #print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
         print("Total time: {} seconds.".format(time.time()- start_time))
         return 0
     except KeyboardInterrupt:
