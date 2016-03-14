@@ -133,6 +133,7 @@ def filter_using_clusters(sentences, percentage, clusters):
     return chosen_sentences
 
 def print_based_on_fuzzy(angels_objects, p):
+    print("***** RESULTS BASED ONLY ON FUZZY *****")
     number_sentences = math.floor(p * len(angels_objects))
     sorted_by_rank = [element for element in sorted(angels_objects, 
         key=lambda x: x.rank, reverse=True)][0:number_sentences]
@@ -159,7 +160,7 @@ def main():
         cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
         stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
         numerical_data_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'CD')
-        #k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage, threads)
+        k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage, threads)
         # summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
 
         sentences_feature_list = []
@@ -206,7 +207,7 @@ def main():
         #fuzzy_ranks = fuzzy.get_fuzzy_ranks(sentences_feature_list)
         #print(fuzzy_ranks)
         #fuzzy.print_everything(preprocessed_text[1], sentences_feature_list)
-        #print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
+        print_based_on_fuzzy(preprocessed_text[1], float(percentage)/100)
         print("Total time: {} seconds.".format(time.time()- start_time))
         return 0
     except KeyboardInterrupt:
