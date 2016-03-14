@@ -26,9 +26,9 @@ mem_funcs['title_word'] =        {'L':
                                     {'start' :0.25, 'peak' :1.00, 'end' :2.00}}
 
 mem_funcs['sentence_location'] = {'L':
-                                    {'start' :  -1, 'peak' :   0, 'end' :   1},
+                                    {'start' :  -1, 'peak' :   0, 'end' :   0.7},
                                   'H':
-                                    {'start' :   0, 'peak' :   1, 'end' :   2}} 
+                                    {'start' :   0, 'peak' :   1, 'end' :  2}} 
 
 mem_funcs['sentence_length'] =   {'VL':
                                     {'start' :  -1, 'peak' :   0, 'end' :0.25},
@@ -173,8 +173,8 @@ def center_of_gravity(max_rules):
     x_vals = []
     y_vals = []
 
-    integration_start = -0.3
-    integration_end = 1.3
+    integration_start = -0.4
+    integration_end = 1.4
 
     x_vals = list(numpy.arange(integration_start, integration_end, dx))
 
