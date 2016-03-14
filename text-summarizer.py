@@ -109,7 +109,6 @@ def print_stuff(sentences, sentences_features):
         rules.print_rules_results(data[i])
 
 def filter_using_clusters(sentences, percentage, clusters):
-    print(clusters)
     number_sentences = math.floor(percentage * len(sentences))
     sentences = sorted(sentences, key=lambda x: x.rank, reverse=True)
     clusters_counter = [0] * len(clusters)
@@ -127,6 +126,8 @@ def filter_using_clusters(sentences, percentage, clusters):
                     else:
                         clusters_counter[i] += 1
                     break;
+            if (len(chosen_sentences) >= number_sentences):
+                break;
     chosen_sentences = sorted(chosen_sentences, key=lambda x: x.position)
     for sentence in chosen_sentences:
         print(sentence.original)
