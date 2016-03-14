@@ -44,7 +44,7 @@ def pre_process_text(text):
     #Pre-process text
     for detected_sentence in detected_sentences:
         
-        tokens = nltk.word_tokenize(sentences[-1].original)
+        tokens = nltk.word_tokenize(detected_sentence)
         tokens = [token for token in tokens if token not in stopwords_list]
         if tokens:
             sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
@@ -159,7 +159,7 @@ def main():
         cue_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[CUE_PHRASE_FILE])
         stigma_phrase_feature_value = features.phrase_feature(preprocessed_text[1], resources[STIGMA_WORDS_FILE])
         numerical_data_feature_value = features.pos_tag_feature(preprocessed_text[1], preprocessed_text[2], 'CD')
-        k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage, threads)
+        #k_means_result = cluster.k_means(preprocessed_text[1], preprocessed_text[2], percentage, threads)
         # summary = cluster.cluster_based_summary(preprocessed_text[1], k_means_result[0], k_means_result[1])
 
         sentences_feature_list = []
