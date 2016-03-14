@@ -47,8 +47,9 @@ def pre_process_text(text):
         tokens = nltk.word_tokenize(detected_sentence)
         tokens = [token for token in tokens if token not in stopwords_list]
         if tokens:
-            sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
             part_of_speech = nltk.pos_tag(tokens)
+            bag_of_words = []
+            stemmed_bag_of_words = []
             for (token, word_pos) in zip(tokens, part_of_speech):
                 token = token.lower()
                 if (token not in list(string.punctuation) and (token not in stopwords_list)):
@@ -56,8 +57,12 @@ def pre_process_text(text):
                         words[token] = tc.Word(stemmer.stem(token), word_pos, [(lemma, stemmer.stem(lemma)) for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
                     elif token in words:
                         words[token].increment_abs_frequency()
-                    sentences[-1].bag_of_words.append(token)
-                    sentences[-1].stemmed_bag_of_words.append(stemmer.stem(token))
+                    bag_of_words.append(token)
+                    stemmed_bag_of_words.append(stemmer.stem(token))
+            if (len(bag_of_words) != 0 or len(stemmed_bag_of_words) != 0):
+                sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
+                sentences[-1].bag_of_words = list(bag_of_words)
+                sentences[-1].stemmed_bag_of_words = list(stemmed_bag_of_words)        
     return [title, sentences, words]
 
 def process_input(argv=None):
