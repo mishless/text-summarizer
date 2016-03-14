@@ -26,7 +26,6 @@ cos(a, b) = sum(a*b)/sqrt(sum(a^2))*sqrt(sum(b^2))
 6. Similarities are saved in a 2d array
 ''' 
 def cosine_similarity_thread_run(number_of_thread, number_of_sentences, sentences, words, stemmer, results):
-    start_time = time.time()
     similarities = {}
     start_sentence_position = number_of_thread * number_of_sentences
     end_sentence_position = (number_of_thread + 1) * number_of_sentences
@@ -47,24 +46,20 @@ def cosine_similarity_thread_run(number_of_thread, number_of_sentences, sentence
                                  | set(sentence.bag_of_words))
                         # Substitute each word with an array of it plus all its synonyms 
                         bag_of_words = \
-                            [list(set(words[word].synonym_list
-                             + [word])) for word in bag_of_words]
+                            [list(set([synonym[1] for synonym in words[word].synonym_list]
+                             + [stemmer.stem(word)])) for word in bag_of_words]
                         # Calculate the vector for the first sentences by 
                         # counting occurances of every word plus its synonyms 
                         # from the bag of words in the sentence after stemming it
                         first_sentence_vector = [reduce(lambda x, y: x \
-                                + y, [[stemmer.stem(sentence_word)
-                                for sentence_word in
-                                sentences[sentence_position].bag_of_words].count(stemmer.stem(word))
+                                + y, [sentences[sentence_position].stemmed_bag_of_words.count(word)
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
                         # Calculate the vector for the second sentences by
                         # counting occurances of every word plus its synonyms
                         # from the bag of words in the sentence after stemming it
                         second_sentence_vector = [reduce(lambda x, y: x \
-                                + y, [[stemmer.stem(sentence_word)
-                                for sentence_word in
-                                sentence.bag_of_words].count(stemmer.stem(word))
+                                + y, [sentence.stemmed_bag_of_words.count(word)
                                 for word in synonyms]) for synonyms in
                                 bag_of_words]
                         # Calculate denominator according to the formula
@@ -81,26 +76,29 @@ def cosine_similarity_thread_run(number_of_thread, number_of_sentences, sentence
                                    zip(first_sentence_vector,
                                    second_sentence_vector)]) \
                             / denominator
-    #print("Thread {} took {} seconds to finish.".format(number_of_thread, time.time() - start_time))
     results[number_of_thread] = similarities
 
 def calculate_cosine_similarity(sentences, words, number_of_threads):
     stemmer = PorterStemmer()
     similarities = {}
-    # For every pair of sentences initialize the similarity to None
-    start_time =time.time()
+    # Create the specified number of threads, run them and join result
     threads = []
     results = [None] * number_of_threads
     number_of_sentences = math.ceil(len(sentences)/number_of_threads)
     for number_of_thread in range(0, number_of_threads):
-        threads.append(threading.Thread(name='Thread#{}'.format(number_of_thread), target=cosine_similarity_thread_run,args=(number_of_thread, number_of_sentences, sentences, words, stemmer, results)))
+        threads.append(threading.Thread(name='Thread#{}'.format(number_of_thread),
+        target=cosine_similarity_thread_run,args=(number_of_thread,
+                                                  number_of_sentences,
+                                                  sentences,
+                                                  words,
+                                                  stemmer,
+                                                  results)))
     for number_of_thread in range(0, number_of_threads):
         threads[number_of_thread].start()
     for number_of_thread in range(0, number_of_threads):
         threads[number_of_thread].join()
     for number_of_thread in range(0, number_of_threads):
         similarities.update(results[number_of_thread])
-    #print("Calculating cosine similarity took {} seconds.".format(time.time() - start_time))
     return similarities
 
 def calculate_number_of_clusters(sentences, words):
@@ -143,10 +141,8 @@ def k_means(sentences, words, percentage, number_of_threads):
                 clusters[best_cluster_center].append(sentence.position)
             elif best_cluster_center not in clusters:
                 clusters[best_cluster_center] = [sentence.position]
-        #print("Assigning of clusters took {} seconds.".format(time.time() - start_time))
 
         # Re-evaluate the new centers of the clusters
-        start_time = time.time()
         accumulative_similarities = {}
         old_centers = centers
         centers = []
@@ -165,7 +161,6 @@ def k_means(sentences, words, percentage, number_of_threads):
                            for sentence_positon in
                            clusters[cluster_index]], key=lambda x: \
                            x[1])[0])
-        #print("Re-evaluating new centers took {} seconds.".format(time.time() - start_time))
     return [centers, clusters]
 
 def cluster_based_summary(sentences, centers, clusters):

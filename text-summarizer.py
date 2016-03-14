@@ -38,12 +38,12 @@ def pre_process_text(text):
     for (token, word_pos) in zip(tokens, part_of_speech):
         token = token.lower()
         if (token not in words) and (token not in list(string.punctuation) and (token not in stopwords_list)):
-                words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
+                words[token] = tc.Word(stemmer.stem(token), word_pos, [(lemma, stemmer.stem(lemma)) for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
         title.bag_of_words.append(token)
 
     #Pre-process text
     for detected_sentence in detected_sentences:
-        sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], None))
+        sentences.append(tc.Sentence(detected_sentence, len(sentences) + 1, [], [], None))
         tokens = nltk.word_tokenize(sentences[-1].original)
         tokens = [token for token in tokens if token not in stopwords_list]
         part_of_speech = nltk.pos_tag(tokens)
@@ -51,10 +51,11 @@ def pre_process_text(text):
             token = token.lower()
             if (token not in list(string.punctuation) and (token not in stopwords_list)):
                 if (token not in words):
-                    words[token] = tc.Word(stemmer.stem(token), word_pos, [lemma for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
+                    words[token] = tc.Word(stemmer.stem(token), word_pos, [(lemma, stemmer.stem(lemma)) for synset in nltk.corpus.wordnet.synsets(token) for lemma in synset.lemma_names()])
                 elif token in words:
                     words[token].increment_abs_frequency()
                 sentences[-1].bag_of_words.append(token)
+                sentences[-1].stemmed_bag_of_words.append(stemmer.stem(token))
     return [title, sentences, words]
 
 def process_input(argv=None):

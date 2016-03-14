@@ -14,15 +14,15 @@ class Word:
         self.__term_weight = val
 
     def increment_abs_frequency(self):
-        self.abs_frequency+=1
-
+        self.abs_frequency += 1
 
 class Sentence:
-    def __init__(self, original, position, bag_of_words, ending_char):
+    def __init__(self, original, position, bag_of_words, stemmed_bag_of_words, ending_char):
         self.original = original
         self.position = position
         self.rank = 0
         self.bag_of_words = bag_of_words
+        self.stemmed_bag_of_words = stemmed_bag_of_words
         self.ending_char = ending_char
 
     @property
