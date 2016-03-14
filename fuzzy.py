@@ -173,8 +173,8 @@ def center_of_gravity(max_rules):
     x_vals = []
     y_vals = []
 
-    integration_start = -0.5
-    integration_end = 1.5
+    integration_start = -0.3
+    integration_end = 1.3
 
     x_vals = list(numpy.arange(integration_start, integration_end, dx))
 
