@@ -93,7 +93,7 @@ def process_input(argv=None):
 
 def resource_loader():
     resources = dict()
-    path = './resources'
+    path = os.path.dirname(os.path.realpath(__file__)) + '\\resources\\'
     resource_files = [file.split()[0] for file in os.listdir(path)]
     for resource_file_name in resource_files:
         with open(path + "/"+resource_file_name, 'r') as f:
