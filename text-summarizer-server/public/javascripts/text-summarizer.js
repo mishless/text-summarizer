@@ -68,5 +68,11 @@ $(document).ready(function() {
         $(this).toggleClass('clicked');
         $('#principal').fadeIn(2000);
         $('#animate-load').hide(1000);
+        $('footer').css('position','inherit');
     });
 });
+$(function(){
+    $('#logo-load').hover(function() {
+        $("#logo-load").removeClass("animated");
+    });
+  });

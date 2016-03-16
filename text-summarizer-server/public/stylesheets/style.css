@@ -68,9 +68,11 @@ h1{
 }
 
 .footer {
-    position:absolute;
-    bottom:0;
-    width:95%;
+   position:absolute;
+   bottom:0;
+   left:0;
+   width:90%;
+   height:80px;
 }
 .loading {
     position: fixed;
@@ -92,6 +94,9 @@ h1{
     left: 0;
     bottom: 0;
     right: 0;
+}
+
+.animated {
     -moz-animation: scale 3.5s; 
     -webkit-animation: scale 3.5s; 
     -o-animation: scale 3.5s;
@@ -122,22 +127,24 @@ h1{
     cursor: pointer;
 }
 
-/*#animate-load  img:hover {
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+ #logo-load:hover {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
 
 @keyframes shake {
-10%, 90% {transform: translate3d(-1px, 0, 0);}
-20%, 80% {transform: translate3d(2px, 0, 0);}
-30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
-@-moz-keyframes shake {
-10%, 90% {transform: translate3d(-1px, 0, 0);}
-20%, 80% {transform: translate3d(2px, 0, 0);}
-30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
-}
-@-webkit-keyframes shake { 
-10%, 90% {transform: translate3d(-1px, 0, 0);}
-20%, 80% {transform: translate3d(2px, 0, 0);}
-30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
-}*/
