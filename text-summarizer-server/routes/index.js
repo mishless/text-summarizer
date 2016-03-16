@@ -23,7 +23,7 @@ router.post('/summarize', function(req, res, next) {
     if (!fs.existsSync(path.join(__filename, '..', '..', 'texts'))) {
         fs.mkdirSync(path.join(__filename, '..', '..', 'texts'));
     }
-    fs.writeFile(path.join(__filename, '..', '..', 'texts', name + '.txt'), req.body.text, function(err) {
+    fs.writeFile(path.join(__filename, '..', '..', 'texts', name + '.txt'), req.body.text, 'ascii', function(err) {
         if (err) {
             res.send({ error: err });
         }
