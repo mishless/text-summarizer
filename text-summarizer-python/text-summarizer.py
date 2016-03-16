@@ -160,6 +160,7 @@ def main():
         threads = int(processed_input['threads'])
         resources = resource_loader()
         preprocessed_text = pre_process_text(text)
+        preprocessed_text[1] = sorted(preprocessed_text[1], key=lambda x: x.position)
         keyword_feature_value = features.keyword_feature(preprocessed_text[1], preprocessed_text[2])
         title_word_feature_value = features.title_word_feature(preprocessed_text[0], preprocessed_text[1])
         sentence_location_feature_value = features.sentence_location_feature(preprocessed_text[1])
@@ -212,6 +213,14 @@ def main():
                 chosen = 1
             all_sentences_information.append([sentence.position, sentence.rank, chosen])
         print(all_sentences_information)
+        print([keyword_feature_value,
+               title_word_feature_value,
+               sentence_location_feature_value,
+               sentence_length_feature_value,
+               proper_noun_feature_value,
+               numerical_data_feature_value,
+               cue_phrase_feature_value,
+               stigma_phrase_feature_value])
         print(preprocessed_text[0].original)
         for sentence in chosen_sentences:
             print(sentence.original)

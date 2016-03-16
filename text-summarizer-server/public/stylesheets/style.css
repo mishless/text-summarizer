@@ -47,11 +47,17 @@ h1{
 }
 
 #summary {
-    text-align: left;
+    text-align: justify;
 }
 
 #summary-text {
     padding-bottom: 30px;
+}
+
+#summary-made {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .footer{
