@@ -138,8 +138,6 @@ def filter_using_clusters(sentences, percentage, clusters):
             if (len(chosen_sentences) >= number_sentences):
                 break;
     chosen_sentences = sorted(chosen_sentences, key=lambda x: x.position)
-    for sentence in chosen_sentences:
-        print(sentence.original)
     return chosen_sentences
 
 def print_based_on_fuzzy(angels_objects, p):
@@ -206,7 +204,17 @@ def main():
 
         #fuzzy.print_everything(preprocessed_text[1], sentences_feature_list)
         fuzzy.set_fuzzy_ranks(preprocessed_text[1], sentences_feature_list)
-        filter_using_clusters(preprocessed_text[1], float(percentage)/100, k_means_result[1])
+        chosen_sentences = filter_using_clusters(preprocessed_text[1], float(percentage)/100, k_means_result[1])
+        all_sentences_information = []
+        for sentence in preprocessed_text[1]:
+            chosen = 0
+            if (sentence in chosen_sentences):
+                chosen = 1
+            all_sentences_information.append([sentence.position, sentence.rank, chosen])
+        print(all_sentences_information)
+        print(preprocessed_text[0].original)
+        for sentence in chosen_sentences:
+            print(sentence.original)
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

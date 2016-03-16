@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    div(id='wait-modal', class='modal fade in', role='dialog')
+        div(class='modal-dialog loading')
+            img(class='img-responsive center-block loading', src='images/loader.gif')
+
+    div(class='container text-center', id='animate-load')
+        img(class='img-responsive center-block logo', src='images/logo.png')
+    div(class='container text-center', id='principal', style='display:none')
+        div(class='panel-group')
+            div(class='panel panel-default')
+                div(class='panel-heading')
+                    h2(id='header') Summarize a text
+                div(class='panel-body')
+                    div(id='make-summary')
+                        form(role='form')  
+                            div(class='form-group')
+                                label(for='text') Copy-paste the text you would like to summarize
+                                textarea(id='text', rows='20', class='form-control', placeholder='Insert text to summarize')
+                            div(class='form-group')
+                                label(for='percentage') Enter the compression ratio as a percentage
+                                input(id='percentage', type='number', min='10', max='100', value='25', class="form-control")
+                            button(type='button', class='btn btn-default', id='submit-for-summary') Summarize It!
+                    div(id='summary-made', style='display: none')
+                        div(id='summary', class='col-sm-6') 
+                            h3(id='summary-title')
+                            div(id='summary-text')
+                            button(type='button', class='btn btn-default', id='summarize-again') Summarize Again!
+                        div(id='chart-div', class='col-sm-6')

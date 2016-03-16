@@ -1,0 +1,143 @@
+html body{
+    background-color:#2c3e50;
+}
+
+h2 {
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+    font-weight:bold;
+}
+
+h1{
+    color: #efefef;
+    font-size:48px;
+}
+
+.summary .panel-body, .file-name .panel-body {
+    background-color:#fff;
+}
+
+.container .row{
+    padding-top:10px;
+}
+
+.alert{
+    border-radius: 0px;
+}
+
+.alert-info, .alert-success, .alert-danger{
+    color:#2c3e50;
+    border: none;
+}
+
+.alert-info {
+    background-color:#ecf0f1;
+}
+
+.alert-success {
+    background-color:#2ecc71;
+
+}
+
+.alert-danger {
+    background-color:#e74c3c;
+}
+
+.row{
+  margin-right: 0px;
+}
+
+#summary {
+    text-align: left;
+}
+
+#summary-text {
+    padding-bottom: 30px;
+}
+
+.footer{
+    text-align: center;
+    margin: 10px;
+    color: #ededed;
+}
+.logo {
+    width: 330px;
+}
+
+#principal {
+    margin-top:100px;
+}
+
+.footer {
+    position:absolute;
+    bottom:0;
+    width:95%;
+}
+.loading {
+    position: fixed;
+    z-index: 999;
+    overflow: visible;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+#animate-load img {
+    position: fixed;
+    z-index: 999;
+    overflow: visible;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    -moz-animation: scale 3.5s; 
+    -webkit-animation: scale 3.5s; 
+    -o-animation: scale 3.5s;
+}
+@keyframes scale {
+    0%   {width:0px;}
+    70%  {width:400px;}
+    100% {width:330px;}
+}
+@-moz-keyframes scale {
+    0%   {width:0px;}
+    70%  {width:400px;}
+    100% {width:330px;}
+}
+@-webkit-keyframes scale { 
+    0%   {width:0px;}
+    70%  {width:400px;}
+    100% {width:330px;}
+}
+
+@-o-keyframes scale { 
+    0%   {width:0px;}
+    90%  {width:400px;}
+    100% {width:330px;}
+}
+
+#animate-load  img:hover {
+    cursor: pointer;
+}
+
+/*#animate-load  img:hover {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+10%, 90% {transform: translate3d(-1px, 0, 0);}
+20%, 80% {transform: translate3d(2px, 0, 0);}
+30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
+}
+@-moz-keyframes shake {
+10%, 90% {transform: translate3d(-1px, 0, 0);}
+20%, 80% {transform: translate3d(2px, 0, 0);}
+30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
+}
+@-webkit-keyframes shake { 
+10%, 90% {transform: translate3d(-1px, 0, 0);}
+20%, 80% {transform: translate3d(2px, 0, 0);}
+30%, 50%, 70% {transform: translate3d(-4px, 0, 0);}
+}*/
